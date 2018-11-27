@@ -45,6 +45,7 @@ namespace WcfService
         private static TokenValidationParameters LoadFromConfig()
         {
             var identityConfiguration = FederatedAuthentication.FederationConfiguration.IdentityConfiguration;
+            
             _x509CertificateStoreTokenResolver = new X509CertificateStoreTokenResolver(StoreName.My, identityConfiguration.TrustedStoreLocation);
             var wsFederationAuthenticationIssuer = FederatedAuthentication.FederationConfiguration.WsFederationConfiguration.Issuer;
 
@@ -53,14 +54,13 @@ namespace WcfService
                 ValidateIssuer = !string.IsNullOrEmpty(wsFederationAuthenticationIssuer),
                 ValidIssuer = wsFederationAuthenticationIssuer,
                 SaveSigninToken = identityConfiguration.SaveBootstrapContext,
-                ClockSkew = identityConfiguration.MaxClockSkew
+                ClockSkew = identityConfiguration.MaxClockSkew,
+                CertificateValidator = identityConfiguration.CertificateValidator
             };
 
             if (identityConfiguration.AudienceRestriction.AudienceMode == AudienceUriMode.Always && identityConfiguration.AudienceRestriction.AllowedAudienceUris.Any())
             {
                 tokenValidationParameters.ValidateAudience = true;
-                tokenValidationParameters.ValidAudience = identityConfiguration.AudienceRestriction.AllowedAudienceUris
-                    .Select(x => x.AbsoluteUri).FirstOrDefault();
                 tokenValidationParameters.ValidAudiences =
                     identityConfiguration.AudienceRestriction.AllowedAudienceUris.Select(x => x.AbsoluteUri);
             }
@@ -83,7 +83,7 @@ namespace WcfService
 
             SecurityToken jwtSecurityToken;
             var claimsPrinciple = JwtSecurityTokenHandler.ValidateToken(jwtPayload, TokenValidationParameters, out jwtSecurityToken);
-
+ 
             return claimsPrinciple;
         }
 
