@@ -82,6 +82,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConfigurationBasedJwtSecurityTokenHandler.cs" />
     <Compile Include="JwtClaimsAuthenticationManager.cs" />
     <Compile Include="Service.svc.cs">
       <DependentUpon>Service.svc</DependentUpon>
