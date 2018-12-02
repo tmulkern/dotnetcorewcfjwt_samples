@@ -1,6 +1,6 @@
 #  Code for Authentication of a .Net Core WCF Client using a Json Web Token (JWT) as a BearerToken to a WCF Service
 
-This sample code is use for an article on Medium.com - **Using a Bearer token in .Net Core with WCF** [Part 1](https://medium.com/@tadhg.j.mulkern/using-a-bearer-token-in-net-core-with-wcf-part-1-8db2c54113f8) and [Part 2](https://medium.com/@tadhg.j.mulkern/using-a-bearer-token-in-net-core-with-wcf-part-2-9bf04a911023)
+This sample code is used for an article on Medium.com - **Using a Bearer token in .Net Core with WCF** [Part 1](https://medium.com/@tadhg.j.mulkern/using-a-bearer-token-in-net-core-with-wcf-part-1-8db2c54113f8) and [Part 2](https://medium.com/@tadhg.j.mulkern/using-a-bearer-token-in-net-core-with-wcf-part-2-9bf04a911023)
 
 ## Build and Installation instructions
 You will need Visual Studio 2017 with the latest .Net Core to build the WcfClient code, .Net Framework 4.6.2 (or greater) to build the Wcf.Contract (.Net Standard) and the WcfService
