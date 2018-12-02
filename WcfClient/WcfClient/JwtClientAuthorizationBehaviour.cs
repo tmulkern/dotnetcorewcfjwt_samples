@@ -11,8 +11,7 @@ namespace WcfClient
 {
     public class JwtClientAuthorizationBehaviour : IClientMessageInspector,IEndpointBehavior
     {
-        private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
-
+ 
         public object BeforeSendRequest(ref Message request, IClientChannel channel)
         {
             var jwtSecurityToken =
@@ -24,7 +23,7 @@ namespace WcfClient
 
             var property = new HttpRequestMessageProperty();
 
-            var jwtEncodedString = _jwtSecurityTokenHandler.WriteToken(jwtSecurityToken);
+            var jwtEncodedString = jwtSecurityToken.RawData;
 
             property.Headers.Add(HttpRequestHeader.Authorization, jwtEncodedString);
             request.Properties.Add(HttpRequestMessageProperty.Name, property);

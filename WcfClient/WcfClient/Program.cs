@@ -18,19 +18,11 @@ namespace WcfClient
         {
             _channelFactory = CreateChannelFactory();
 
-            var signingCreds = CreateSigningCredentials();
-
             Console.WriteLine("Enter value for Name Claim");
             var nameClaimValue = Console.ReadLine();
 
-            var claims = new List<Claim>
-            {
-                {new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",nameClaimValue) }
-            };
-
-            var token = new JwtSecurityToken("http://myissuer.net", "http://myaudience.net/", claims, DateTime.UtcNow, DateTime.UtcNow.AddHours(1), signingCreds);
-
-            var channel = _channelFactory.CreateChannelWithJwtToken(token);
+            var encodedJwtString = CreateSelfSignedSecurityToken(nameClaimValue);
+            var channel = _channelFactory.CreateChannelWithJwtToken(encodedJwtString);
 
             var res = channel.GetClaim();
 
@@ -44,7 +36,7 @@ namespace WcfClient
             _channelFactory.Close();
         }
 
-        public static ChannelFactory<IService> CreateChannelFactory()
+        private static ChannelFactory<IService> CreateChannelFactory()
         {
             var binding = new BasicHttpsBinding();
 
@@ -60,13 +52,31 @@ namespace WcfClient
             return channelFactory;
         }
 
-        public static SigningCredentials CreateSigningCredentials()
+        private static SigningCredentials CreateSigningCredentials()
         {
             var certificate = new X509Certificate2(@"MyCA.pfx", "mypassword");
 
             var signingCreds = new X509SigningCredentials(certificate, SecurityAlgorithms.RsaSha256Signature);
 
             return signingCreds;
+        }
+
+        private static readonly JwtSecurityTokenHandler JwtSecurityTokenHandler = new JwtSecurityTokenHandler();
+
+        private static string CreateSelfSignedSecurityToken(string nameClaimValue)
+        {
+            var signingCreds = CreateSigningCredentials();
+
+            var claims = new List<Claim>
+            {
+                {new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",nameClaimValue) }
+            };
+
+            var token = new JwtSecurityToken("http://myissuer.net", "http://myaudience.net/", claims, DateTime.UtcNow, DateTime.UtcNow.AddHours(1), signingCreds);
+
+            var encodedJwtString=JwtSecurityTokenHandler.WriteToken(token);
+
+            return encodedJwtString;
         }
     }
 }
